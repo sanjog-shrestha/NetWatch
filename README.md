@@ -1,42 +1,93 @@
-\# 🌐 NetWatch - Network Monitoring System
+# NetWatch v1
 
+A lightweight Dockerized network monitoring service that continuously checks internet connectivity by pinging multiple public endpoints and logging latency/packet-loss information.
 
+## Features
 
-\[!\[Docker](https://img.shields.io/badge/Docker-Containerized-blue)](https://www.docker.com/)
+- Monitors network connectivity using ICMP ping
+- Pings multiple targets every 30 seconds
+- Records latency measurements
+- Detects packet loss
+- Writes logs to persistent storage
+- Runs inside a Docker container
+- Simple and resource-efficient design
 
-\[!\[Python](https://img.shields.io/badge/Python-3.11-green)](https://www.python.org/)
+---
 
-\[!\[License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+## Architecture
 
+```text
++----------------------+
+|  NetWatch Container  |
++----------+-----------+
+           |
+           v
+    +-------------+
+    |  ping3 ICMP |
+    +-------------+
+           |
+           v
++-----------------------+
+| Targets              |
+| - 8.8.8.8 (Google)   |
+| - 1.1.1.1 (Cloudflare)|
++-----------------------+
+           |
+           v
++-----------------------+
+| Logging System        |
+| /logs/netwatch.log    |
++-----------------------+
+```
 
+## Project Structure
 
-A lightweight, containerized network monitoring solution that tracks latency and packet loss to critical infrastructure targets. Built with DevOps principles, it's designed to evolve from a simple ping monitor to a full-featured observability platform.
+```text
+netwatch/
+├── Dockerfile
+├── requirements.txt
+├── src/
+│   └── monitor.py
+├── logs/
+└── docker-compose.yml
+```
 
-
-
-\## 🚀 Quick Start
-
-
+## Build
 
 ```bash
-
-\# Clone repository
-
-git clone https://github.com/yourusername/netwatch.git
-
-cd netwatch
-
-
-
-\# Build and run
-
 docker build -t netwatch:v1 .
+```
 
-docker run -d --name netwatch -v $(pwd)/logs:/logs netwatch:v1
+## Run
 
+```bash
+mkdir -p logs
 
+docker run -d \
+  --name netwatch \
+  -v $(pwd)/logs:/logs \
+  netwatch:v1
+```
 
-\# View logs
+## View Logs
 
+```bash
 tail -f logs/netwatch.log
+```
 
+## Stop
+
+```bash
+docker stop netwatch
+docker rm netwatch
+```
+
+## Roadmap
+
+- Phase 2: Environment variables and health checks
+- Phase 3: Prometheus and Grafana integration
+- Phase 4: Alerting and dashboard
+
+## License
+
+MIT
